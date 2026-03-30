@@ -29,7 +29,7 @@ INITIAL_VENDORS.forEach(v => {
 // ── Middleware ─────────────────────────────────────────────────────────────
 app.use('/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(__dirname));
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function slugify(str) {
