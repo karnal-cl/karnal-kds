@@ -4,7 +4,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const SHOPIFY_SECRET = process.env.SHOPIFY_WEBHOOK_SECRET || '';
+const SHOPIFY_SECRET = process.env.SHOPIFY_WEBHOOK_SECRET || ''; 
 
 // ── In-memory store (reemplazar por DB en producción) ──────────────────────
 const store = {
