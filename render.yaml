@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: karnal-kds
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: ADMIN_KEY
+        generateValue: false
+      - key: SHOPIFY_WEBHOOK_SECRET
+        generateValue: false

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buska — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--celeste:#3ED6E0;--celeste-dim:rgba(62,214,224,0.12);--celeste-mid:rgba(62,214,224,0.3);--negro:#121212;--negro2:#1c1c1c;--negro3:#252525;--negro4:#2f2f2f;--blanco:#FFFFFF;--text:#FFFFFF;--text2:rgba(255,255,255,0.5);--text3:rgba(255,255,255,0.22);--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--verde:#2ecc8a;--amber:#f0a020}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--negro);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+
+.topbar{background:var(--negro2);border-bottom:1px solid var(--border);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--celeste),transparent 55%)}
+.logo-wrap{display:flex;align-items:center;gap:12px}
+.logo-icon{width:38px;height:38px;border-radius:10px;background:var(--celeste);display:flex;align-items:center;justify-content:center}
+.logo-name{font-size:20px;font-weight:800;color:var(--celeste);letter-spacing:-.5px;line-height:1}
+.logo-sub{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.admin-badge{background:var(--celeste-dim);border:1px solid var(--celeste-mid);color:var(--celeste);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:5px;margin-left:8px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.clock{font-size:18px;font-weight:700;color:var(--blanco);letter-spacing:1px}
+.btn-test{background:var(--negro3);border:1px solid var(--border2);color:var(--text2);padding:8px 16px;border-radius:8px;font-size:12px;font-family:'Nunito',sans-serif;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-test:hover{color:var(--blanco)}
+.btn-refresh{background:var(--celeste);color:var(--negro);border:none;padding:8px 18px;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s}
+.btn-refresh:hover{background:#5ee8f2}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:24px 28px}
+.stat{background:var(--negro2);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.stat-val{font-size:32px;font-weight:800;line-height:1}
+.stat-lbl{font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-top:5px}
+.stat:nth-child(1) .stat-val{color:var(--blanco)}
+.stat:nth-child(2) .stat-val{color:var(--text3)}
+.stat:nth-child(3) .stat-val{color:var(--amber)}
+.stat:nth-child(4) .stat-val{color:var(--verde)}
+
+.section{padding:0 28px 24px}
+.sh{font-size:11px;font-weight:700;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+
+.orders-list{display:flex;flex-direction:column;gap:10px}
+.order-row{background:var(--negro2);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.order-row:hover{border-color:var(--border2)}
+.order-stripe{height:3px}
+.order-top{padding:15px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.order-num{font-size:20px;font-weight:800;color:var(--blanco);letter-spacing:-.3px}
+.order-meta{font-size:12px;color:var(--text2);margin-top:3px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid transparent}
+.chip-done{background:rgba(46,204,138,0.12);color:var(--verde);border-color:rgba(46,204,138,0.2)}
+.chip-partial{background:rgba(240,160,32,0.12);color:var(--amber);border-color:rgba(240,160,32,0.2)}
+.chip-pending{background:rgba(255,255,255,0.04);color:var(--text3);border-color:var(--border)}
+.chip-dot{width:6px;height:6px;border-radius:50%}
+.empty{padding:48px;text-align:center;color:var(--text3);font-size:14px}
+
+.vendors-section{padding:0 28px 48px}
+.vendor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.vendor-card{background:var(--negro2);border:1px solid var(--border);border-radius:12px;padding:15px 18px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+.vendor-card:hover{border-color:var(--border2)}
+.vendor-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.vl-name{font-size:14px;font-weight:800;color:var(--blanco)}
+.vl-url{font-size:10px;color:var(--text3);margin-top:3px;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.copy-btn{background:var(--negro3);color:var(--text2);border:1px solid var(--border2);padding:7px 14px;border-radius:7px;font-size:12px;font-family:'Nunito',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0;margin-left:auto}
+.copy-btn:hover{color:var(--blanco)}
+.copy-btn.copied{color:var(--celeste);border-color:var(--celeste-mid)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo-wrap">
+    <div class="logo-icon" style="background:#bc2626">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 4L6 20M6 12L12 6M6 12L13 20" stroke="#efe7e4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8C14 8 18 10 18 14C18 17 15 18 13 18" stroke="#efe7e4" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:center">
+        <div class="logo-name" style="color:#efe7e4;font-size:16px;letter-spacing:3px">KARNAL</div>
+        <span class="admin-badge">Admin</span>
+      </div>
+      <div class="logo-sub" style="color:#bc2626">Carnicería Online</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="clock" id="clock">--:--</span>
+    <button class="btn-test" onclick="testOrder()">+ Pedido de prueba</button>
+    <button class="btn-refresh" onclick="loadAll()">Actualizar</button>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Pedidos activos</div></div>
+  <div class="stat"><div class="stat-val" id="s-pending">0</div><div class="stat-lbl">Pendientes</div></div>
+  <div class="stat"><div class="stat-val" id="s-partial">0</div><div class="stat-lbl">En preparación</div></div>
+  <div class="stat"><div class="stat-val" id="s-done">0</div><div class="stat-lbl">Listos para retiro</div></div>
+</div>
+
+<div class="section">
+  <div class="sh">Pedidos del día</div>
+  <div class="orders-list" id="orders-list"><div class="empty">Cargando pedidos...</div></div>
+</div>
+
+<div class="vendors-section">
+  <div class="sh">Acceso por proveedor</div>
+  <div class="vendor-grid" id="vendor-grid"><div class="empty">Cargando...</div></div>
+</div>
+
+<script>
+const adminKey = new URLSearchParams(location.search).get('key') || '';
+const base = location.origin;
+
+async function loadOrders() {
+  const r = await fetch(`/api/admin/orders?key=${adminKey}`);
+  if (!r.ok) { document.getElementById('orders-list').innerHTML = '<div class="empty" style="color:#e05050">Error de autenticación.</div>'; return; }
+  const data = await r.json();
+  const orders = data.orders || [];
+  let total = 0, pending = 0, partial = 0, done = 0;
+  orders.forEach(o => {
+    const vs = Object.values(o.vendorSummary || {});
+    const allR = vs.every(v => v.ready), someR = vs.some(v => v.ready);
+    if (allR) done++; else if (someR) partial++; else pending++;
+    total++;
+  });
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-pending').textContent = pending;
+  document.getElementById('s-partial').textContent = partial;
+  document.getElementById('s-done').textContent = done;
+
+  const list = document.getElementById('orders-list');
+  if (!orders.length) { list.innerHTML = '<div class="empty">Sin pedidos aún. Crea un pedido de prueba.</div>'; return; }
+
+  list.innerHTML = orders.map(order => {
+    const vs = Object.entries(order.vendorSummary || {});
+    const allReady = vs.every(([,v]) => v.ready);
+    const someReady = vs.some(([,v]) => v.ready);
+    const stripeColor = allReady ? '#2ecc8a' : someReady ? '#f0a020' : '#252525';
+    const chips = vs.map(([,v]) => {
+      const cls = v.ready ? 'chip-done' : v.done > 0 ? 'chip-partial' : 'chip-pending';
+      const dotColor = v.ready ? '#2ecc8a' : v.done > 0 ? '#f0a020' : 'rgba(255,255,255,0.15)';
+      return `<div class="chip ${cls}"><div class="chip-dot" style="background:${dotColor}"></div>${v.vendorName} ${v.done}/${v.total}</div>`;
+    }).join('');
+    const mins = Math.floor((Date.now() - new Date(order.createdAt)) / 60000);
+    return `<div class="order-row">
+      <div class="order-stripe" style="background:${stripeColor}"></div>
+      <div class="order-top">
+        <div>
+          <div class="order-num">${order.number} <span style="font-size:13px;font-weight:500;color:var(--text2)">· ${order.customer} · ${mins} min</span></div>
+          <div class="order-meta">${new Date(order.createdAt).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})} hrs${order.note ? ' · ' + order.note : ''}</div>
+        </div>
+        <div class="chips">${chips}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadVendors() {
+  const r = await fetch(`/api/admin/vendors?key=${adminKey}`);
+  if (!r.ok) return;
+  const data = await r.json();
+  const vendors = data.vendors || [];
+  const grid = document.getElementById('vendor-grid');
+  if (!vendors.length) { grid.innerHTML = '<div class="empty">Sin proveedores registrados.</div>'; return; }
+  grid.innerHTML = vendors.map(v => {
+    const url = `${base}/panel/vendor.html?token=${v.token}`;
+    return `<div class="vendor-card">
+      <div class="vendor-dot" style="background:${v.color || '#3ED6E0'}"></div>
+      <div style="flex:1;min-width:0">
+        <div class="vl-name">${v.name}</div>
+        <div class="vl-url">${url}</div>
+      </div>
+      <button class="copy-btn" id="copy-${v.slug}" onclick="copyUrl('${url}','${v.slug}')">Copiar link</button>
+    </div>`;
+  }).join('');
+}
+
+function copyUrl(url, slug) {
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copy-' + slug);
+    btn.textContent = '✓ Copiado'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar link'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+async function testOrder() {
+  await fetch(`/api/admin/test-order?key=${adminKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+  loadAll();
+}
+
+async function loadAll() { await Promise.all([loadOrders(), loadVendors()]); }
+setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }); }, 1000);
+setInterval(loadOrders, 10000);
+loadAll();
+</script>
+</body>
+</html>
